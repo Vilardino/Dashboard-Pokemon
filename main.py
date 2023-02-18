@@ -4,6 +4,7 @@
 from dash import Dash, html, dcc
 import plotly.express as px
 import pandas as pd
+import plotly.graph_objects as go
 
 app = Dash(__name__)
 
@@ -15,7 +16,34 @@ df = pd.DataFrame({
     "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
 })
 
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+figf = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+
+categories = ['processing cost','mechanical properties','chemical stability',
+              'thermal stability', 'device integration']
+
+fig = go.Figure()
+
+fig.add_trace(go.Scatterpolar(
+      r=[1, 5, 2, 2, 3],
+      theta=categories,
+      fill='toself',
+      name='Product A'
+))
+fig.add_trace(go.Scatterpolar(
+      r=[4, 3, 2.5, 1, 2],
+      theta=categories,
+      fill='toself',
+      name='Product B'
+))
+
+fig.update_layout(
+  polar=dict(
+    radialaxis=dict(
+      visible=True,
+      range=[0, 5]
+    )),
+  showlegend=False
+)
 
 app.layout = html.Div(children=[
     html.H1(children='Hello Dash'),
@@ -26,8 +54,10 @@ app.layout = html.Div(children=[
 
     dcc.Graph(
         id='example-graph',
-        figure=fig
-    )
+        figure=figf
+    ),
+    dcc.Graph(figure=fig)
+
 ])
 
 if __name__ == '__main__':
