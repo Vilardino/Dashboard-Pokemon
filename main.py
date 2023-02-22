@@ -23,27 +23,53 @@ categories = ['processing cost','mechanical properties','chemical stability',
 
 fig = go.Figure()
 
-fig.add_trace(go.Scatterpolar(
-      r=[1, 5, 2, 2, 3],
-      theta=categories,
+#gera status pokemon em rede
+
+dfp = pd.read_csv('pokemon.csv')
+
+ordem = ['pokedex_number','name', 'hp','attack', 'defense', 'sp_attack', 'sp_defense', 'speed', 'base_total',
+        'type1', 'type2', 'height_m', 'weight_kg',  'abilities',
+       'base_egg_steps', 'base_happiness', 'capture_rate',
+       'classfication', 'experience_growth',
+       'japanese_name',  'percentage_male', 'against_bug', 'against_dark', 'against_dragon',
+       'against_electric', 'against_fairy', 'against_fight', 'against_fire',
+       'against_flying', 'against_ghost', 'against_grass', 'against_ground',
+       'against_ice', 'against_normal', 'against_poison', 'against_psychic',
+       'against_rock', 'against_steel', 'against_water',
+       'is_legendary']
+
+df = dfp[ordem]
+maximo = (dfp.loc[:,['hp','attack', 'defense', 'sp_attack', 'sp_defense', 'speed']].max()).max()
+minimo = (dfp.loc[:,['hp','attack', 'defense', 'sp_attack', 'sp_defense', 'speed']].min()).min()
+
+
+pokemon_list = ['Lucario', 'Pikachu'] #variaveis a serem mudadas para comparar status #######################################
+
+df1 = df.loc[df['name'].isin(pokemon_list)]
+
+for i in pokemon_list:
+  df_filtered = df.loc[df['name'] == i]
+  r = [int(df_filtered['hp']), int(df_filtered['attack']), int(df_filtered['defense']), int(df_filtered['sp_attack']), int(df_filtered['sp_defense']), int(df_filtered['speed'])]
+  fig.add_trace(go.Scatterpolar(
+      r=r,
+      theta=['hp', 'attack', 'defense', 'sp_attack', 'sp_defense', 'speed'],
       fill='toself',
-      name='Product A'
-))
-fig.add_trace(go.Scatterpolar(
-      r=[4, 3, 2.5, 1, 2],
-      theta=categories,
-      fill='toself',
-      name='Product B'
-))
+      name= i
+  ))
 
 fig.update_layout(
-  polar=dict(
-    radialaxis=dict(
-      visible=True,
-      range=[0, 5]
-    )),
-  showlegend=False
+    polar=dict(
+        radialaxis=dict(
+            visible=True,
+            range=[minimo-20, maximo+20]
+        )),
+    showlegend=True
 )
+
+
+
+
+
 
 app.layout = html.Div(children=[
     html.H1(children='Hello Dash'),
@@ -56,6 +82,7 @@ app.layout = html.Div(children=[
         id='example-graph',
         figure=figf
     ),
+
     dcc.Graph(figure=fig)
 
 ])
