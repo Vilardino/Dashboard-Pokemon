@@ -1,0 +1,16 @@
+.Select-option {
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: left center;
+    padding-left: 60px;
+}
+
+.Select-option img {
+    display: none;
+}
+
+.dash-dropdown-menu {
+    display: block;
+}
+
+body {background-color: black;}
